@@ -6,6 +6,7 @@ const events = require('./events.js');
 const users = require('./users.js');
 //const user = require('./users.js');
 
+console.log('access Route');
 
 // no need to be token-checked
 router.post('/login', auth.login);

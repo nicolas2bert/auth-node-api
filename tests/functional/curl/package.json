@@ -1,0 +1,14 @@
+{
+  "name": "Test-HTTP",
+  "version": "0.0.1",
+  "description": "",
+  "author": "N2B",
+  "license": "ISC",
+  "dependencies": {
+    "request": "*"
+  },
+  "scripts": {
+  },
+  "devDependencies": {
+  }
+}
