@@ -7,17 +7,13 @@ const process = require('process');
 const request = require('request');
 const command = 'curl';
 
-// function exec(done){
-// 	console.log('here2');
-// 	request('http://www.google.com', function (error, response, body) {
-// 		console.log('cococococo');
-// 	  if (!error && response.statusCode == 200) {
-// 	    console.log(body) // Show the HTML for the Google homepage.
-// 	    done();
-// 	  }
-// 	})
-// }
-
+/**
+ * @param  String http_req : request http ex: GET/PUT/POST/DELETE 
+ * @param  String route : http route ex: http://127.0.0.1/YOUR_ROUTE_HERE
+ * @param  Array args : array of curl arguments ex: header... 
+ * @param  {Function} done: callback
+ * @return none
+ */
 function exec_code(http_req, route, args, done) {
 	const allArgs = ['-X', http_req, 'http://127.0.0.1:8000/'+route].concat(args);
 	const child = cp.spawn(
@@ -55,8 +51,8 @@ function exec_res(http_req, route, args, cb) {
 describe('HTTP', function() {
     describe('Perfect Login', () => {
 
-    	const route = 'login';
     	const http_request = 'POST'
+        const route = 'login';
     	const args = [
     		'-d'
     		, '{"username":"xyz","password":"xyz"}'
@@ -65,11 +61,11 @@ describe('HTTP', function() {
     	];
     	//const args = [];
 
-        it('Should exit code 0', function(done) {
+        it('Should exit code 0', (done) => {
         	exec_code(http_request, route, args, done);
         });
 
-        it('Should return exprire/user/token', function(done){
+        it('Should return exprire/user/token', (done) => {
         	exec_res(http_request, route, args, (err, res) => {
 
         		const token = res['token'];
@@ -86,4 +82,43 @@ describe('HTTP', function() {
         });
 
     });
+
+    describe('Get v1/api/event', function(){
+
+        const http_requestB = 'POST';
+        const routeB = 'login';
+        const argsB = [
+            '-d'
+            , '{"username":"xyz","password":"xyz"}'
+            , '-H'
+            , 'Content-Type: application/json'
+        ];
+        let token = "";
+        before('First, login', (done) => {
+            exec_res(http_requestB, routeB, argsB, (err, res) => {
+                token = res['token'];
+                console.log('TOKEN  ',token);
+                done();
+            });
+        });
+
+        it('Then, check if the token has been generated', () => {
+            assert.notStrictEqual(token, undefined);
+        });
+
+        it('Then, GET api/v1/events : try to access event', (done) => {
+            const http_request = 'GET';
+            const route = 'api/v1/events';
+            const args = ['-H', 'x-access-token:'+token];
+            exec_res(http_request, route, args, (err, res) => {
+                assert.strictEqual(res, 'getAll', 'GET do not return "getAll"');
+                done();
+            });
+        });
+
+    });
+
+
+
+
 });

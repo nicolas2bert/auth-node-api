@@ -57,7 +57,7 @@ function expiresIn(days){
 const userDB = {
 	username : 'nicolas2bert',
 	name: 'Nicolas HUMBERT',
-	role: 'admin'
+	role: 'noob'
 }
 
 module.exports = auth;
